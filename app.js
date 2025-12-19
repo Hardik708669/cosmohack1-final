@@ -104,7 +104,7 @@ function requireAuth(req, res, next) {
   if (req.session.authenticated && req.session.user) {
     next();
   } else {
-    res.redirect("/login");
+    res.redirect("/landing_page");
   }
 }
 
@@ -121,10 +121,7 @@ function isAdmin(req, res, next) {
   }
 }
 
-// Routes
-app.get("/", (req, res) => {
-  res.redirect("/login");
-});
+// Login and Sign Up Routes
 
 app.get("/login", (req, res) => {
   if (req.session.user) {
@@ -216,6 +213,21 @@ app.get("/logout", (req, res) => {
   });
 });
 
+app.get("/", (req, res) => {
+  res.redirect("landing_page");
+});
+
+// Landing Page Route
+
+app.get("/landing_page", (req, res) => {
+  if (req.session.user) {
+    return res.redirect("/dashboard");
+  }
+  res.render("landing_page");
+});
+
+// Dashboard Page Route
+
 app.get("/dashboard", requireAuth, (req, res) => {
   res.render("dashboard", {
     stats: mockData.stats,
@@ -224,6 +236,8 @@ app.get("/dashboard", requireAuth, (req, res) => {
     page: "dashboard",
   });
 });
+
+// Users page Route
 
 app.get("/users", requireAuth, isAdmin, (req, res) => {
   const allUsers = User.getAllUsers();
@@ -242,6 +256,8 @@ app.get("/users/new", requireAuth, (req, res) => {
   });
 });
 
+// Template page Route
+
 app.get("/templates", requireAuth, (req, res) => {
   res.render("template", {
     templates: mockData.templates,
@@ -257,6 +273,8 @@ app.get("/templates/new", requireAuth, (req, res) => {
     page: "templates",
   });
 });
+
+// Campaign Page Route
 
 app.get("/campaigns", requireAuth, (req, res) => {
   res.render("campaign", {
