@@ -69,34 +69,45 @@
     <nav class="navbar">
       <div class="nav-container">
         <div style="display: flex; align-items: center; gap: 1rem">
-          <button id="sidebarToggle" class="sidebar-toggle">
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
+          <% if (typeof page === 'undefined' || page !== 'landing') { %>
+  <!-- Sidebar toggle button -->
+  <button id="sidebarToggle" class="sidebar-toggle">
+    <span></span><span></span><span></span>
+  </button>
+<% } %>
+
           <a href="/dashboard" class="nav-brand">SecureGuard</a>
         </div>
         <ul class="nav-links">
-          <li><a href="/dashboard">Dashboard</a></li>
-          <li><a href="/users">Users</a></li>
-          <li><a href="/templates">Templates</a></li>
-          <li><a href="/campaigns">Campaigns</a></li>
+          <li><a href="/">About Us</a></li>
+          <li><a href="/">Pricing</a></li>
+          <li><a href="/">Support Center</a></li>
+         
           <li>
             <button id="themeToggle" class="theme-toggle" title="Toggle theme">
               <span class="theme-icon">🌙</span>
             </button>
           </li>
-          <li style="color: #64748b; padding: 0.5rem 1rem; font-size: 0.85rem">
-            <% if (typeof user !== 'undefined' && user) { %> 👤 <%=
-            user.fullName || user.username %> <% } %>
-          </li>
-          <li>
-            <a
-              href="/logout"
-              style="background: rgba(239, 68, 68, 0.1); color: #fca5a5"
-              >Logout</a
-            >
-          </li>
+          <% if (page !== 'landing') { %>
+  <% if (typeof user !== 'undefined' && user) { %>
+    <li style="color: #64748b; padding: 0.5rem 1rem; font-size: 0.85rem">
+      👤 <%= user.fullName || user.username %>
+    </li>
+    <li>
+      <a href="/logout" style="background: rgba(239, 68, 68, 0.1); color: #fca5a5">
+        Logout
+      </a>
+    </li>
+  <% } else { %>
+    <li><a href="/login">Log In</a></li>
+    <li><a href="/signup">Sign Up</a></li>
+  <% } %>
+<% } else { %>
+  <!-- Landing page -->
+  <li><a href="/login">Log In</a></li>
+  <li><a href="/signup">Sign Up</a></li>
+<% } %>
+
         </ul>
       </div>
     </nav>

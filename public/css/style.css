@@ -136,6 +136,7 @@ body::before {
   position: relative;
   transition: all 0.3s ease;
   letter-spacing: -0.5px;
+  margin-left: 1rem;
 }
 
 [data-theme="light"] .nav-brand {
@@ -157,17 +158,19 @@ body::before {
   list-style: none;
   align-items: center;
   gap: 1.5rem;
+ 
 }
 
 .nav-links a {
   color: #cbd5e1;
   text-decoration: none;
-  padding: 0.5rem 0.5rem;
+  padding: 0.5rem 1.2rem;
   border-radius: 8px;
   transition: all 0.3s ease;
   font-weight: 500;
   position: relative;
   font-size: 0.9rem;
+
 }
 
 [data-theme="light"] .nav-links a {
