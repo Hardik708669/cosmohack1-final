@@ -426,6 +426,170 @@ app.post("/gamification/complete-task", requireAuth, async (req, res) => {
   }
 });
 
+app.get("/gamified-learning", requireAuth, async (req, res) => {
+  try {
+    const user = await User.findById(req.session.user.id);
+
+    // 1. Calculate Rank
+    const allUsers = User.getAllUsers();
+    const sortedUsers = allUsers.sort(
+      (a, b) => b.experiencePoints - a.experiencePoints
+    );
+    const rank = sortedUsers.findIndex((u) => u.id === user.id) + 1;
+    user.rank = rank;
+
+    // --- DATA GENERATION ---
+    const formatDate = (date) =>
+      date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    const today = new Date();
+
+    // 2. WEEKLY CHALLENGES DATA
+    const weeklyChallenges = {
+      active: {
+        id: "w-active",
+        title: "The SQL Injection Sprint",
+        description:
+          "Find and patch 3 SQL vulnerabilities in the provided dummy bank application.",
+        xp: 500,
+        startDate: formatDate(
+          new Date(today.setDate(today.getDate() - today.getDay()))
+        ), // Last Sunday
+        endDate: formatDate(new Date(today.setDate(today.getDate() + 6))), // Next Saturday
+        winner: "TBD",
+        status: "active",
+      },
+      upcoming: [
+        {
+          id: "w-next",
+          title: "Cross-Site Scripting (XSS) Race",
+          description: "A speed run to identify reflected XSS attacks.",
+          xp: 600,
+          startDate: "Next Mon",
+          endDate: "Next Sun",
+          status: "upcoming",
+        },
+      ],
+      past: [
+        {
+          id: "w-past-1",
+          title: "Password Cracking Marathon",
+          description: "Brute-force the hashes (legally!) in our sandbox.",
+          xp: 450,
+          startDate: "Last Week",
+          endDate: "Last Week",
+          winner: "CyberNinja_99",
+          status: "past",
+        },
+      ],
+    };
+
+    // 3. MONTHLY CHALLENGES DATA
+    const monthlyChallenges = {
+      active: {
+        id: "m-active",
+        title: "Red Team Operation: Alpha",
+        description:
+          "A full-scale penetration test on the 'MegaCorp' simulation. Root access required.",
+        xp: 2500,
+        startDate: "Oct 1",
+        endDate: "Oct 31",
+        winner: "TBD",
+        status: "active",
+      },
+      upcoming: [
+        {
+          id: "m-next",
+          title: "Blue Team Defense Month",
+          description: "Defend the fortress against an automated AI attacker.",
+          xp: 3000,
+          startDate: "Nov 1",
+          endDate: "Nov 30",
+          status: "upcoming",
+        },
+      ],
+      past: [
+        {
+          id: "m-past",
+          title: "The Zero-Day Hunt",
+          description: "Find the hidden vulnerability in the kernel module.",
+          xp: 5000,
+          startDate: "Sep 1",
+          endDate: "Sep 30",
+          winner: "SarahHacks",
+          status: "past",
+        },
+      ],
+    };
+
+    // 4. DAILY MISSIONS
+    const missions = [
+      {
+        id: 101,
+        title: "Phishing Detective",
+        description: "Identify 3 phishing emails.",
+        xp: 50,
+        difficulty: "easy",
+      },
+      {
+        id: 102,
+        title: "2FA Setup",
+        description: "Enable 2FA settings.",
+        xp: 150,
+        difficulty: "medium",
+      },
+      {
+        id: 103,
+        title: "Malware Analysis",
+        description: "Analyze the file hash.",
+        xp: 300,
+        difficulty: "hard",
+      },
+    ];
+
+    // 5. ACHIEVEMENTS
+    const achievements = [
+      { name: "First Steps", icon: "🟢", unlocked: true },
+      { name: "Level 5 Guardian", icon: "🛡️", unlocked: user.level >= 5 },
+      {
+        name: "XP Millionaire",
+        icon: "💎",
+        unlocked: user.experiencePoints >= 1000,
+      },
+      {
+        name: "Mission Master",
+        icon: "🎯",
+        unlocked: user.completedTasks && user.completedTasks.length > 5,
+      },
+    ];
+
+    // 6. RENDER THE PAGE WITH ALL VARIABLES
+    res.render("gamified_learning", {
+      user: user,
+      missions: missions,
+      weeklyChallenges: weeklyChallenges, // <--- This fixes your error
+      monthlyChallenges: monthlyChallenges, // <--- This fixes the next error you would get
+      achievements: achievements,
+      page: "gamified_learning",
+    });
+  } catch (error) {
+    console.error("[Server] Error loading gamified learning:", error);
+    res.redirect("/dashboard");
+  }
+});
+
+// Handle "Start Mission" Button Click
+app.post("/missions/start/:id", requireAuth, (req, res) => {
+  const missionId = req.params.id;
+  console.log(
+    `[Server] User ${req.session.user.username} started mission ${missionId}`
+  );
+
+  if (missionId == 101) {
+    return res.redirect("/gamification/task/1");
+  }
+  res.redirect("/gamified-learning");
+});
+
 // Leaderboard Page
 
 app.get("/leaderboard", requireAuth, (req, res) => {

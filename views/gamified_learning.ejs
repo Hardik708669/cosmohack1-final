@@ -1,0 +1,186 @@
+<%- include('partials/header', { title: 'Gamified Challenges - SecureGuard' })
+%> <%- include('partials/sidebar', { page: 'gamified_learning' }) %>
+
+<div class="main-content">
+  <div class="game-container">
+    <section class="hero fade-in-left">
+      <h1>
+        <span>🚀</span>
+        <span
+          style="
+            color: var(--light-gold);
+            text-shadow: 0 0 20px rgba(252, 211, 77, 0.2);
+          "
+        >
+          Gamified Cyber Challenges
+        </span>
+      </h1>
+      <p>
+        Compete in weekly and monthly events. Rise to the top, earn massive XP,
+        and claim your rewards.
+      </p>
+
+      <div class="stats">
+        <div class="stat-card">
+          <span>🔥 Total XP</span>
+          <h3><%= user.experiencePoints %></h3>
+        </div>
+        <div class="stat-card">
+          <span>⭐ Level</span>
+          <h3><%= user.level %></h3>
+        </div>
+        <div class="stat-card">
+          <span>🏆 Global Rank</span>
+          <h3>#<%= user.rank %></h3>
+        </div>
+      </div>
+    </section>
+
+    <section class="challenge-section fade-in-up">
+      <div class="section-header">
+        <h2>📅 Weekly Sprints</h2>
+        <span class="live-indicator">● LIVE NOW</span>
+      </div>
+
+      <div class="challenge-card active-card">
+        <div class="card-badge weekly">This Week</div>
+        <div class="content">
+          <div class="header">
+            <h3><%= weeklyChallenges.active.title %></h3>
+            <span class="xp-badge"
+              >⚡ <%= weeklyChallenges.active.xp %> XP</span
+            >
+          </div>
+          <p><%= weeklyChallenges.active.description %></p>
+
+          <div class="meta-row">
+            <div class="date">
+              <span
+                >🕒 <%= weeklyChallenges.active.startDate %> - <%=
+                weeklyChallenges.active.endDate %></span
+              >
+            </div>
+            <div class="winner-status">
+              <span>🏆 Winner: <strong>TBD</strong></span>
+            </div>
+          </div>
+        </div>
+        <div class="action">
+          <form
+            action="/missions/start/<%= weeklyChallenges.active.id %>"
+            method="POST"
+          >
+            <button type="submit" class="btn-challenge">Enter Challenge</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="sub-challenges-grid">
+        <% weeklyChallenges.upcoming.forEach(c => { %>
+        <div class="challenge-card upcoming">
+          <div class="card-status">Upcoming</div>
+          <h4><%= c.title %></h4>
+          <p class="date"><%= c.startDate %></p>
+          <span class="xp-mini">+<%= c.xp %> XP</span>
+        </div>
+        <% }) %> <% weeklyChallenges.past.forEach(c => { %>
+        <div class="challenge-card past">
+          <div class="card-status done">Ended</div>
+          <h4><%= c.title %></h4>
+          <div class="winner-banner">
+            🏆 Winner: <span class="winner-name"><%= c.winner %></span>
+          </div>
+          <p class="date"><%= c.startDate %></p>
+        </div>
+        <% }) %>
+      </div>
+    </section>
+
+    <section class="challenge-section fade-in-up" style="margin-top: 3rem">
+      <div class="section-header">
+        <h2>🌕 Monthly Operations</h2>
+      </div>
+
+      <div class="challenge-card active-card monthly-theme">
+        <div class="card-badge monthly">Current Month</div>
+        <div class="content">
+          <div class="header">
+            <h3><%= monthlyChallenges.active.title %></h3>
+            <span class="xp-badge"
+              >💎 <%= monthlyChallenges.active.xp %> XP</span
+            >
+          </div>
+          <p><%= monthlyChallenges.active.description %></p>
+
+          <div class="meta-row">
+            <div class="date">
+              <span
+                >🗓️ <%= monthlyChallenges.active.startDate %> - <%=
+                monthlyChallenges.active.endDate %></span
+              >
+            </div>
+            <div class="winner-status">
+              <span>🏆 Winner: <strong>TBD</strong></span>
+            </div>
+          </div>
+        </div>
+        <div class="action">
+          <form
+            action="/missions/start/<%= monthlyChallenges.active.id %>"
+            method="POST"
+          >
+            <button type="submit" class="btn-challenge">Join Operation</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="sub-challenges-grid">
+        <% monthlyChallenges.upcoming.forEach(c => { %>
+        <div class="challenge-card upcoming">
+          <div class="card-status">Next Month</div>
+          <h4><%= c.title %></h4>
+          <span class="xp-mini">+<%= c.xp %> XP</span>
+        </div>
+        <% }) %> <% monthlyChallenges.past.forEach(c => { %>
+        <div class="challenge-card past">
+          <div class="card-status done">Ended</div>
+          <h4><%= c.title %></h4>
+          <div class="winner-banner">
+            🏆 Winner: <span class="winner-name"><%= c.winner %></span>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+    </section>
+
+    <section class="missions fade-in-up" style="margin-top: 4rem">
+      <h2>🎯 Daily Quick Tasks</h2>
+      <div class="mission-grid">
+        <% missions.forEach(mission => { %>
+        <div class="mission-card <%= mission.difficulty %>">
+          <span class="xp">+<%= mission.xp %> XP</span>
+          <h3><%= mission.title %></h3>
+          <p><%= mission.description %></p>
+          <form action="/missions/start/<%= mission.id %>" method="POST">
+            <button type="submit">Start</button>
+          </form>
+        </div>
+        <% }) %>
+      </div>
+    </section>
+
+    <section class="achievements fade-in-up">
+      <h2>🏆 Badge Collection</h2>
+      <div class="badge-grid">
+        <% achievements.forEach(badge => { %>
+        <div class="badge <%= badge.unlocked ? 'unlocked' : 'locked' %>">
+          <div class="badge-icon"><%= badge.icon %></div>
+          <div class="badge-name"><%= badge.name %></div>
+        </div>
+        <% }) %>
+      </div>
+    </section>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

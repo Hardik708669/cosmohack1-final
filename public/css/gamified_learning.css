@@ -1,0 +1,491 @@
+.game-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0; /* padding handled by parent main-content */
+}
+
+/* HERO SECTION */
+.hero {
+  margin-bottom: 2.5rem;
+}
+
+.hero h1 {
+  font-size: 2.8rem; /* Slightly larger for impact */
+  font-weight: 800;
+  background: linear-gradient(90deg, #34d399, #22d3ee);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+  letter-spacing: -1px;
+}
+
+.hero p {
+  color: #94a3b8;
+  font-size: 1.1rem;
+  max-width: 600px;
+}
+
+/* STATS ROW */
+.stats {
+  display: grid; /* Changed to grid for better mobile handling */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.stat-card {
+  background: rgba(2, 6, 23, 0.8); /* Slight transparency */
+  backdrop-filter: blur(10px);
+  border: 1px solid #1e293b;
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  border-color: #34d399;
+  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.1);
+}
+
+.stat-card span {
+  display: block;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #64748b;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.stat-card h3 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0;
+}
+
+/* PROGRESS SECTION */
+.progress-card {
+  margin-top: 3rem;
+  background: rgba(2, 6, 23, 0.8);
+  border-radius: 20px;
+  padding: 2rem;
+  border: 1px solid #1e293b;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 1rem;
+}
+
+.progress-header h2 {
+  font-size: 1.25rem;
+  color: #fff;
+  margin: 0;
+}
+
+.progress-header span {
+  font-family: monospace;
+  color: #34d399;
+  font-size: 1.1rem;
+}
+
+.progress-bar {
+  height: 12px;
+  background: #0f172a;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e, #34d399);
+  transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px rgba(34, 197, 153, 0.4);
+}
+
+.next-level {
+  margin-top: 1rem;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  text-align: right;
+}
+
+/* MISSIONS SECTION */
+.missions {
+  margin-top: 4rem;
+}
+
+.missions h2,
+.achievements h2 {
+  font-size: 1.5rem;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.mission-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.mission-card {
+  background: rgba(2, 6, 23, 0.6);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid #1e293b;
+  position: relative;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.mission-card:hover {
+  transform: translateY(-5px);
+  background: rgba(2, 6, 23, 0.9);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.mission-card h3 {
+  margin-bottom: 0.5rem;
+  color: #f8fafc;
+  font-size: 1.1rem;
+  padding-right: 3rem; /* Make room for XP badge */
+}
+
+.mission-card p {
+  color: #94a3b8;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.xp {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  color: #34d399;
+  font-weight: 700;
+  font-size: 0.9rem;
+  background: rgba(52, 211, 153, 0.1);
+  padding: 0.2rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid rgba(52, 211, 153, 0.2);
+}
+
+.mission-card button {
+  margin-top: auto;
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #34d399, #22d3ee);
+  color: #020617;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+.mission-card button:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 0 15px rgba(52, 211, 153, 0.4);
+}
+
+/* Difficulty Borders */
+.easy {
+  border-left: 4px solid #22c55e;
+}
+.medium {
+  border-left: 4px solid #eab308;
+}
+.hard {
+  border-left: 4px solid #ef4444;
+}
+
+/* ACHIEVEMENTS */
+.achievements {
+  margin-top: 4rem;
+}
+
+.badge-grid {
+  display: grid; /* Improved from flex to grid for better wrapping */
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1.5rem;
+}
+
+.badge {
+  padding: 1.5rem;
+  border-radius: 16px;
+  background: rgba(2, 6, 23, 0.6);
+  border: 1px solid #1e293b;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.badge-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.badge-name {
+  font-weight: 600;
+  color: #e2e8f0;
+  font-size: 0.9rem;
+}
+
+.badge.unlocked {
+  background: rgba(52, 211, 153, 0.05);
+  border-color: rgba(52, 211, 153, 0.3);
+  box-shadow: 0 0 20px rgba(52, 211, 153, 0.05);
+}
+
+.badge.unlocked:hover {
+  transform: scale(1.05);
+  border-color: #34d399;
+}
+
+.locked {
+  opacity: 0.5;
+  filter: grayscale(100%);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+  .stats {
+    grid-template-columns: 1fr;
+  }
+  .progress-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .mission-grid {
+    grid-template-columns: 1fr;
+  }
+  .badge-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.live-indicator {
+  color: #ef4444;
+  font-weight: 700;
+  font-size: 0.8rem;
+  animation: pulse 1.5s infinite;
+  background: rgba(239, 68, 68, 0.1);
+  padding: 0.2rem 0.6rem;
+  border-radius: 99px;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* --- ACTIVE CARD (The Big One) --- */
+.challenge-card.active-card {
+  background: linear-gradient(
+    145deg,
+    rgba(2, 6, 23, 0.9),
+    rgba(15, 23, 42, 0.95)
+  );
+  border: 1px solid #34d399; /* Green border for active */
+  border-radius: 16px;
+  padding: 0; /* Reset padding for internal layout */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+}
+
+/* Monthly Theme Override */
+.challenge-card.active-card.monthly-theme {
+  border-color: #a855f7; /* Purple for monthly */
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.15);
+}
+
+.card-badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #34d399;
+  color: #020617;
+  font-weight: 700;
+  padding: 0.25rem 1rem;
+  font-size: 0.8rem;
+  border-bottom-right-radius: 12px;
+  text-transform: uppercase;
+}
+
+.monthly-theme .card-badge {
+  background: #a855f7;
+  color: white;
+}
+
+.active-card .content {
+  padding: 2rem 2rem 1rem 2rem;
+}
+
+.active-card .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.active-card h3 {
+  font-size: 1.5rem;
+  margin: 0;
+  color: #fff;
+}
+
+.active-card p {
+  color: #94a3b8;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.meta-row {
+  display: flex;
+  gap: 2rem;
+  font-size: 0.9rem;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.75rem;
+  border-radius: 8px;
+}
+
+.active-card .action {
+  padding: 1rem 2rem 2rem 2rem;
+}
+
+.btn-challenge {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #34d399, #10b981);
+  color: #020617;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-challenge:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+}
+
+.monthly-theme .btn-challenge {
+  background: linear-gradient(90deg, #a855f7, #7e22ce);
+  color: white;
+}
+
+.monthly-theme .btn-challenge:hover {
+  box-shadow: 0 5px 15px rgba(126, 34, 206, 0.4);
+}
+
+/* --- GRID FOR SUB CHALLENGES --- */
+.sub-challenges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.challenge-card.upcoming,
+.challenge-card.past {
+  background: rgba(2, 6, 23, 0.6);
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  padding: 1.5rem;
+  position: relative;
+}
+
+.card-status {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #94a3b8;
+  margin-bottom: 0.5rem;
+}
+
+.card-status.done {
+  color: #64748b;
+}
+
+.challenge-card h4 {
+  color: #e2e8f0;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.xp-mini {
+  font-size: 0.8rem;
+  color: #34d399;
+  font-weight: 600;
+}
+
+/* Winner Banner */
+.winner-banner {
+  margin-top: 0.5rem;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  padding: 0.4rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  color: #fcd34d;
+}
+
+.winner-name {
+  font-weight: 700;
+  color: #fff;
+}
+
+.challenge-card p.date {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-top: 0.5rem;
+}
+
+/* Locked/Past styling */
+.challenge-card.past {
+  opacity: 0.8;
+}
+
+.challenge-card.past:hover {
+  opacity: 1;
+}
