@@ -385,7 +385,7 @@ app.get("/gamification/:id", requireAuth, async (req, res) => {
 // Complete Task API
 
 app.post("/gamification/complete-task", requireAuth, async (req, res) => {
-  const { taskId } = req.body;
+  const { taskId, answer } = req.body;
 
   if (!taskId) {
     console.error("[Server] Error: Task ID missing in form submission");
@@ -421,6 +421,16 @@ app.post("/gamification/complete-task", requireAuth, async (req, res) => {
     user.experiencePoints += task.experienceReward || 10;
     user.completedTasks.push(task.id.toString());
 
+    // Save User Answer
+    if (!user.taskSubmissions) {
+      user.taskSubmissions = [];
+    }
+    user.taskSubmissions.push({
+      taskId: task.id.toString(),
+      answer: answer || "No answer provided",
+      submittedAt: new Date(),
+    });
+
     // Level Up Logic
     const experienceToNextLevel = user.level * 100;
     if (user.experiencePoints >= experienceToNextLevel) {
@@ -432,10 +442,14 @@ app.post("/gamification/complete-task", requireAuth, async (req, res) => {
       user.id,
       user.level,
       user.experiencePoints,
-      user.completedTasks
+      user.completedTasks,
+      user.taskSubmissions
     );
 
     console.log(`[Server] User ${user.username} completed task ${task.id}`);
+    if (answer) {
+      console.log(`[Server] Answer submitted: ${answer}`);
+    }
 
     res.redirect("/gamification");
   } catch (error) {

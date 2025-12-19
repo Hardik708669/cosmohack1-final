@@ -44,7 +44,7 @@ class User {
             completedTasks: [],
             createdAt: new Date(),
           },
-         
+
         ];
       }
       console.error("Error loading users from file:", error);
@@ -88,6 +88,7 @@ class User {
       level: 1, // Default level
       experiencePoints: 0, // Default experience points
       completedTasks: [], // Array to store IDs of completed tasks
+      taskSubmissions: [], // Array to store user answers
       createdAt: new Date(),
     };
 
@@ -129,7 +130,8 @@ class User {
     userId,
     newLevel,
     newExperiencePoints,
-    newCompletedTasks
+    newCompletedTasks,
+    newTaskSubmissions
   ) {
     const userIndex = this.users.findIndex((u) => u.id === userId);
     if (userIndex === -1) {
@@ -139,6 +141,11 @@ class User {
     this.users[userIndex].level = newLevel;
     this.users[userIndex].experiencePoints = newExperiencePoints;
     this.users[userIndex].completedTasks = newCompletedTasks;
+
+    if (newTaskSubmissions) {
+      this.users[userIndex].taskSubmissions = newTaskSubmissions;
+    }
+
     this._saveUsers(); // Save after updating gamification progress
     return { ...this.users[userIndex], password: undefined };
   }

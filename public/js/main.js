@@ -72,56 +72,23 @@ function copyToClipboard(text) {
     });
 }
 
-// Sidebar Toggle Functionality
-function initSidebarToggle() {
-  const toggleBtn = document.getElementById("sidebarToggle");
-  const sidebar = document.querySelector(".sidebar");
-  const mainContent = document.querySelector(".main-content");
-
-  if (toggleBtn && sidebar && mainContent) {
-    toggleBtn.addEventListener("click", function () {
-      this.classList.toggle("active");
-      sidebar.classList.toggle("collapsed");
-      mainContent.classList.toggle("expanded");
-
-      // Save state to localStorage
-      const isCollapsed = sidebar.classList.contains("collapsed");
-      localStorage.setItem("sidebarCollapsed", isCollapsed);
-    });
-
-    // Restore sidebar state from localStorage
-    const savedState = localStorage.getItem("sidebarCollapsed");
-    if (savedState === "true") {
-      toggleBtn.classList.add("active");
-      sidebar.classList.add("collapsed");
-      mainContent.classList.add("expanded");
-    }
-  }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  initSidebarToggle();
-});
-
-function initSidebarToggle() {
-  const toggleBtn = document.getElementById("sidebarToggle");
-  const sidebar = document.querySelector(".sidebar");
-  const mainContent = document.querySelector(".main-content");
-
-  if (!toggleBtn || !sidebar) return;
-
-  toggleBtn.addEventListener("click", () => {
-    toggleBtn.classList.toggle("active");
-    sidebar.classList.toggle("collapsed");
-    if (mainContent) mainContent.classList.toggle("expanded");
-  });
-}
-
-
 // Initialize tooltips and other UI enhancements
 document.addEventListener("DOMContentLoaded", function () {
-  // Initialize sidebar toggle
-  initSidebarToggle();
+  // --- Sidebar Scroll Persistence ---
+  const sidebar = document.querySelector(".sidebar");
+  if (sidebar) {
+    // Restore scroll position
+    const savedScroll = localStorage.getItem("sidebarScrollPosition");
+    if (savedScroll) {
+      sidebar.scrollTop = parseInt(savedScroll, 10);
+    }
+
+    // Save scroll position on link click or page unload
+    window.addEventListener("beforeunload", () => {
+      localStorage.setItem("sidebarScrollPosition", sidebar.scrollTop);
+    });
+  }
+
   // Add loading states to buttons
   const buttons = document.querySelectorAll(".btn");
   buttons.forEach((btn) => {

@@ -20,7 +20,23 @@ A comprehensive phishing awareness simulation tool built with Node.js, Express, 
    npm install
    ```
 
-2. **Start the Application**
+2. **Setup Environment Variables**
+
+   Create a `.env` file in the root directory:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   Then edit `.env` and add your IPQualityScore API key (optional, but required for security scanning features):
+
+   ```env
+   IPQS_API_KEY=your_api_key_here
+   ```
+
+   Get your free API key at: https://www.ipqualityscore.com/
+
+3. **Start the Application**
 
    ```bash
    npm start
@@ -32,7 +48,7 @@ A comprehensive phishing awareness simulation tool built with Node.js, Express, 
    npm run dev
    ```
 
-3. **Access the Application**
+4. **Access the Application**
    - Open http://localhost:3000
    - Login with: `admin` / `password`
 
@@ -118,5 +134,16 @@ A comprehensive phishing awareness simulation tool built with Node.js, Express, 
 - Smooth animations and transitions
 - Mobile-responsive design
 - Dark theme optimized for security professionals
+
+## 🐛 Recent Bug Fixes
+
+✅ **All critical bugs have been fixed!** See [BUG_FIXES_REPORT.md](./BUG_FIXES_REPORT.md) for details.
+
+**Fixed Issues:**
+- ✅ Added `.env.example` template for environment variables
+- ✅ Fixed CSS syntax error in landing page
+- ✅ Removed duplicate function definitions in main.js
+- ✅ Consolidated DOMContentLoaded event listeners
+- ✅ Improved sidebar toggle with localStorage persistence
 
 Ready to enhance your organization's security awareness! 🛡️
