@@ -20,7 +20,22 @@
     "role": "user",
     "level": 1,
     "experiencePoints": 50,
-    "completedTasks": ["task-1"],
+    "completedTasks": [
+      "task-1"
+    ],
     "createdAt": "2025-12-11T10:04:02.544Z"
+  },
+  {
+    "id": 3,
+    "username": "saranshgolash",
+    "email": "saranshgolash08@gmail.com",
+    "fullName": "Saransh Golash",
+    "password": "$2a$10$gdbokT7qXJVV/d7/NE69x.Mjhef4Cj8HG19MA/4wHbvuH7CWb6Z1K",
+    "role": "user",
+    "level": 1,
+    "experiencePoints": 0,
+    "completedTasks": [],
+    "taskSubmissions": [],
+    "createdAt": "2025-12-19T18:51:26.144Z"
   }
 ]

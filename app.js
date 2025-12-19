@@ -11,8 +11,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
 // Session configuration
@@ -99,6 +99,13 @@ const mockData = {
   ],
 };
 
+// Mock Challenge Data
+
+const CHALLENGES_DATA = {
+  "w-active": { id: "w-active", title: "Weekly Sprint", xp: 500 },
+  "m-active": { id: "m-active", title: "Monthly Operation", xp: 2500 },
+  "d-active": { id: "d-active", title: "Daily Mission", xp: 50 },
+};
 // Authentication middleware
 function requireAuth(req, res, next) {
   if (req.session.authenticated && req.session.user) {
@@ -385,76 +392,76 @@ app.get("/gamification/:id", requireAuth, async (req, res) => {
 // Complete Task API
 
 app.post("/gamification/complete-task", requireAuth, async (req, res) => {
-  const { taskId, answer } = req.body;
+  console.log("🔥 POST ROUTE HIT! Body:", req.body);
+  const { taskId } = req.body;
+  const userId = req.session.user.id;
 
-  if (!taskId) {
-    console.error("[Server] Error: Task ID missing in form submission");
-    return res.redirect("/gamification");
-  }
+  console.log(`[Processing] User ${userId} completing task: ${taskId}`);
+
+  if (!taskId) return res.redirect("/gamified-learning");
 
   try {
-    const user = await User.findById(req.session.user.id);
-    let task = LearningTask.getTaskById(taskId);
-    if (!task) {
+    const user = await User.findById(userId);
+    if (!user) return res.redirect("/login");
+
+    // 1. Determine Reward
+    let reward = 10; // Default
+    // Check if it's a special challenge ID (w-active, m-active, d-active)
+    if (CHALLENGES_DATA[taskId]) {
+      reward = CHALLENGES_DATA[taskId].xp;
+    }
+    // Or check if it's a standard numeric task ID
+    else {
       const numericId = parseInt(taskId);
       if (!isNaN(numericId)) {
-        task = LearningTask.getTaskById(numericId);
+        const task = LearningTask.getTaskById(numericId);
+        if (task) reward = task.experienceReward || 10;
       }
     }
 
-    if (!user || !task) {
-      console.error("[Server] User or Task not found.");
-      return res.redirect("/gamification");
+    // 2. Prevent Duplicate XP (Check if already done)
+    const isAlreadyDone = user.completedTasks.some(
+      (id) => id.toString() === taskId.toString()
+    );
+    if (isAlreadyDone) {
+      console.log("Task already completed. No XP awarded.");
+      return res.redirect("/gamified-learning");
     }
 
-    // Check if already completed
-    const alreadyDone =
-      user.completedTasks.includes(task.id) ||
-      user.completedTasks.includes(task.id.toString());
+    // 3. Update Stats
+    user.experiencePoints += reward;
+    user.completedTasks.push(taskId.toString());
 
-    if (alreadyDone) {
-      console.log("[Server] Task already completed. Redirecting.");
-      return res.redirect("/gamification");
-    }
-
-    // Update Stats
-    user.experiencePoints += task.experienceReward || 10;
-    user.completedTasks.push(task.id.toString());
-
-    // Save User Answer
-    if (!user.taskSubmissions) {
-      user.taskSubmissions = [];
-    }
-    user.taskSubmissions.push({
-      taskId: task.id.toString(),
-      answer: answer || "No answer provided",
-      submittedAt: new Date(),
-    });
-
-    // Level Up Logic
-    const experienceToNextLevel = user.level * 100;
-    if (user.experiencePoints >= experienceToNextLevel) {
+    // 4. Level Up Logic
+    while (user.experiencePoints >= user.level * 100) {
+      user.experiencePoints -= user.level * 100;
       user.level++;
-      user.experiencePoints -= experienceToNextLevel;
     }
 
+    // 5. SAVE TO FILE
     await User.updateGamificationProgress(
       user.id,
       user.level,
       user.experiencePoints,
-      user.completedTasks,
-      user.taskSubmissions
+      user.completedTasks
     );
 
-    console.log(`[Server] User ${user.username} completed task ${task.id}`);
-    if (answer) {
-      console.log(`[Server] Answer submitted: ${answer}`);
-    }
+    // 6. Update Session (Critical for UI update)
+    req.session.user.level = user.level;
+    req.session.user.experiencePoints = user.experiencePoints;
+    req.session.user.completedTasks = user.completedTasks;
 
-    res.redirect("/gamification");
+    console.log(
+      `[Success] Saved! Level: ${user.level}, XP: ${user.experiencePoints}`
+    );
+
+    req.session.save((err) => {
+      if (err) console.error("Session save error:", err);
+      res.redirect("/gamified-learning");
+    });
   } catch (error) {
-    console.error("[Server] Error completing task:", error);
-    res.redirect("/gamification");
+    console.error("Error in complete-task:", error);
+    res.redirect("/dashboard");
   }
 });
 
@@ -632,60 +639,49 @@ app.post("/missions/start/:id", requireAuth, (req, res) => {
   res.redirect("/gamified-learning");
 });
 
-// Weekly Challenge Page Route
-
-app.get("/weekly-challenge", requireAuth, async (req, res) => {
-  const user = await User.findById(req.session.user.id);
-
-  const task = {
-    id: "w-active",
-    title: "Weekly: The SQL Injection Sprint",
-    description:
-      "Your goal is to identify and patch 3 SQL vulnerabilities in the dummy bank app within 60 minutes.",
-    videoUrl: "",
-    documentation:
-      "Read about SQL Injection prevention cheatsheets before starting.",
-    miniTaskDescription: "Submit the flag found in the admin database table.",
-    experienceReward: 500,
-  };
-
-  res.render("weekly_challenge", { task, user, page: "gamified_learning" });
-});
-
 // Monthly Challenge Page Route
 
 app.get("/monthly-challenge", requireAuth, async (req, res) => {
   const user = await User.findById(req.session.user.id);
-
-  const task = {
-    id: "m-active",
-    title: "Monthly: Red Team Operation Alpha",
-    description:
-      "This is a full-scale penetration test simulation. Root access required.",
-    videoUrl: "",
-    documentation: "Review the Rules of Engagement (RoE) document.",
-    miniTaskDescription: "Upload the root.txt hash code.",
-    experienceReward: 2500,
+  const challengeData = {
+    ...CHALLENGES_DATA["m-active"],
+    endDate: "End of Month",
   };
 
-  res.render("monthly_challenge", { task, user, page: "gamified_learning" });
+  res.render("monthly_challenge", {
+    task: challengeData,
+    user,
+    page: "gamified_learning",
+  });
+});
+
+// Weekly Challenge Page Route
+
+app.get("/weekly-challenge", requireAuth, async (req, res) => {
+  const user = await User.findById(req.session.user.id);
+  // Using spread operator to combine challenge data with dynamic date
+  const challengeData = {
+    ...CHALLENGES_DATA["w-active"],
+    endDate: "This Saturday",
+  };
+  res.render("weekly_challenge", {
+    task: challengeData,
+    user,
+    page: "gamified_learning",
+  });
 });
 
 // Daily Challenge Page Route
 
 app.get("/daily-challenge", requireAuth, async (req, res) => {
   const user = await User.findById(req.session.user.id);
+  const challengeData = CHALLENGES_DATA["d-active"];
 
-  const task = {
-    id: "daily-generic",
-    title: "Daily Mission",
-    description: "Complete your daily quick-fire cybersecurity task.",
-    documentation: "Quick tip: Always check the sender's email address.",
-    miniTaskDescription: "Mark this task as complete to keep your streak.",
-    experienceReward: 50,
-  };
-
-  res.render("daily_challenge", { task, user, page: "gamified_learning" });
+  res.render("daily_challenge", {
+    task: challengeData,
+    user,
+    page: "gamified_learning",
+  });
 });
 
 // Leaderboard Page Route
