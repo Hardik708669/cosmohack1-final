@@ -4,9 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%= title || 'Phishing Awareness Tool' %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/enhanced.css" />
     <link rel="stylesheet" href="/css/gamified_learning.css" />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
       // Theme toggle - runs immediately
@@ -70,44 +80,45 @@
       <div class="nav-container">
         <div style="display: flex; align-items: center; gap: 1rem">
           <% if (typeof page === 'undefined' || page !== 'landing') { %>
-  <!-- Sidebar toggle button -->
-  <button id="sidebarToggle" class="sidebar-toggle">
-    <span></span><span></span><span></span>
-  </button>
-<% } %>
+          <!-- Sidebar toggle button -->
+          <button id="sidebarToggle" class="sidebar-toggle">
+            <span></span><span></span><span></span>
+          </button>
+          <% } %>
 
           <a href="/dashboard" class="nav-brand">SecureGuard</a>
         </div>
         <ul class="nav-links">
-          <li><a href="/">About Us</a></li>
-          <li><a href="/">Pricing</a></li>
-          <li><a href="/">Support Center</a></li>
-         
+          <li><a href="/about-us">About Us</a></li>
+          <li><a href="/pricing">Pricing</a></li>
+          <li><a href="/support-center">Support Center</a></li>
+
           <li>
             <button id="themeToggle" class="theme-toggle" title="Toggle theme">
               <span class="theme-icon">🌙</span>
             </button>
           </li>
-          <% if (page !== 'landing') { %>
-  <% if (typeof user !== 'undefined' && user) { %>
-    <li style="color: #64748b; padding: 0.5rem 1rem; font-size: 0.85rem">
-      👤 <%= user.fullName || user.username %>
-    </li>
-    <li>
-      <a href="/logout" style="background: rgba(239, 68, 68, 0.1); color: #fca5a5">
-        Logout
-      </a>
-    </li>
-  <% } else { %>
-    <li><a href="/login">Log In</a></li>
-    <li><a href="/signup">Sign Up</a></li>
-  <% } %>
-<% } else { %>
-  <!-- Landing page -->
-  <li><a href="/login">Log In</a></li>
-  <li><a href="/signup">Sign Up</a></li>
-<% } %>
-
+          <% if (page !== 'landing') { %> <% if (typeof user !== 'undefined' &&
+          user) { %>
+          <li style="color: #64748b; padding: 0.5rem 1rem; font-size: 0.85rem">
+            👤 <%= user.fullName || user.username %>
+          </li>
+          <li>
+            <a
+              href="/logout"
+              style="background: rgba(239, 68, 68, 0.1); color: #fca5a5"
+            >
+              Logout
+            </a>
+          </li>
+          <% } else { %>
+          <li><a href="/login">Log In</a></li>
+          <li><a href="/signup">Sign Up</a></li>
+          <% } %> <% } else { %>
+          <!-- Landing page -->
+          <li><a href="/login">Log In</a></li>
+          <li><a href="/signup">Sign Up</a></li>
+          <% } %>
         </ul>
       </div>
     </nav>

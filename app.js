@@ -233,6 +233,36 @@ app.get("/landing_page", (req, res) => {
   res.render("landing_page");
 });
 
+// About Us Page Route
+
+app.get("/about-us", (req, res) => {
+  res.render("about", {
+    title: "About Us | SecureGuard",
+    page: "about",
+    user: req.user,
+  });
+});
+
+// Pricing Page Route
+
+app.get("/pricing", (req, res) => {
+  res.render("pricing", {
+    title: "Pricing | SecureGuard",
+    page: "pricing",
+    user: req.user,
+  });
+});
+
+// Support Center Page Route
+
+app.get("/support-center", (req, res) => {
+  res.render("support_center", {
+    title: "Support Center | SecureGuard",
+    page: "support",
+    user: req.user,
+  });
+});
+
 // Dashboard Page Route
 
 app.get("/dashboard", requireAuth, (req, res) => {
